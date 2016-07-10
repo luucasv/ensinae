@@ -15,10 +15,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="card hovercard">
         <?php if ($model->foto != NULL) { ?>
         <div class="card-background">
-            <img class="card-bkimg" alt="" src="http://lorempixel.com/100/100/people/9/">
+            <img class="card-bkimg" alt="" src="<?= Yii::getAlias('@web').'/uploads/users/'.$model->foto ?>">
         </div>
         <div class="useravatar">
-            <img alt="" src="http://lorempixel.com/100/100/people/9/">
+            <img alt="" src="<?= Yii::getAlias('@web').'/uploads/users/'.$model->foto ?>">
         </div>
         <?php } else { ?>
             <div class="card-background">

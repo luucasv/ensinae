@@ -9,6 +9,7 @@ use app\models\Cidade;
 use app\models\LoginForm;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\UploadedFile;
 use yii\filters\VerbFilter;
 
 /**
@@ -106,17 +107,25 @@ class UserController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id)
+    public function actionUpdate()
     {
-        $model = $this->findModel($id);
+        $this->layout = "admin";
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+        $model = $this->findModel(Yii::$app->user->identity->id);
+
+        if ($model->load(Yii::$app->request->post())) {
+
+            $model->imageUpload = UploadedFile::getInstance($model, 'imageUpload');
+            $model->upload();
+
+            if ($model->save()) {
+                return $this->redirect(['profile']);
+            }
         }
+            
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
 
     /**

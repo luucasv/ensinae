@@ -5,8 +5,13 @@ namespace app\models;
 use Yii;
 use \yii\db\ActiveRecord;
 use \yii\web\IdentityInterface;
+use yii\helpers\FileHelper;
 use app\models\Cidade;
 use app\models\Estado;
+use yii\helpers\Json;
+use yii\imagine\Image;
+use Imagine\Image\Box;
+use Imagine\Image\Point;
 /**
  * This is the model class for table "{{%tbl_user}}".
  *
@@ -22,7 +27,8 @@ use app\models\Estado;
  */
 class User extends ActiveRecord implements IdentityInterface
 {
-
+    public $imageUpload;
+    public $cropInfo;
     public $confirm_pass;
     /**
      * @inheritdoc
@@ -40,12 +46,12 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             [['nome', 'email', 'senha', 'cidade', 'estado', 'universidade'], 'required'],
             [['cidade', 'estado'], 'integer'],
-            [['data_cadastro', 'confirm_pass'], 'safe'],
+            [['data_cadastro', 'confirm_pass', 'cropInfo'], 'safe'],
             [['nome', 'email', 'universidade'], 'string', 'max' => 100],
             [['email'], 'email'],
             [['email'], 'unique', 'message' => 'Esse e-mail já está cadastrado no sistema.'],
             [['senha'], 'string', 'max' => 20],
-            [['foto'], 'string', 'max' => 255],
+            [['imageUpload'], 'image', 'skipOnEmpty' => true, 'extensions' => ['jpg', 'jpeg', 'png'], 'mimeTypes' => ['image/jpeg', 'image/pjpeg', 'image/png']],
             [['confirm_pass'], 'compare', 'compareAttribute' => 'senha', 'message' => 'As senhas digitadas devem ser iguais']
         ];
     }
@@ -161,5 +167,51 @@ class User extends ActiveRecord implements IdentityInterface
     public function getRAgenda()
     {
         return $this->hasMany(Agenda::className(), ['id_prof' => 'id']);
+    }
+
+    public function upload()
+    {
+        $nome = strtolower(str_replace(" ", "_", $this->nome.date('dmYHis', strtotime($this->data_cadastro))));
+
+        $image = Image::getImagine()->open($this->imageUpload->tempName);
+
+        $cropInfo = Json::decode($this->cropInfo)[0];
+
+        $cropInfo['dWidth'] = (int) $cropInfo['dWidth'];
+        $cropInfo['dHeight'] = (int) $cropInfo['dHeight'];
+        $cropInfo['x'] = abs($cropInfo['x']);
+        $cropInfo['y'] = abs($cropInfo['y']);
+        $cropInfo['width'] = (int) $cropInfo['width'];
+        $cropInfo['height'] = (int) $cropInfo['height'];
+
+        $oldImages = FileHelper::findFiles(Yii::getAlias('@uploadImgPath'),
+            [
+                'only' => [
+                    $nome . '.*',
+                    '/thumbs/thumb_' . $nome . '.*'
+                ]
+            ]
+        );
+
+        for ($counter = 0; $counter != count($oldImages); $counter++) {
+            @unlink($oldImages[$counter]);
+        }
+
+        $newSize = new Box($cropInfo['dWidth'], $cropInfo['dHeight']);
+        $newSizeThumb = new Box(50, 50);
+        $cropSize = new Box($cropInfo['width'], $cropInfo['height']);
+        $cropPoint = new Point($cropInfo['x'], $cropInfo['y']);
+
+        $imageName = $nome . '.' . $this->imageUpload->getExtension();
+
+        $pathThumbImage = Yii::getAlias('@uploadImgThumbsPath') . '/thumb_' . $imageName;
+        $pathImage = Yii::getAlias('@uploadImgPath') . '/' . $imageName;
+
+        $this->foto = $imageName;
+
+        $image->resize($newSize)->crop($cropPoint, $cropSize)->save($pathImage, ['quality' => 100]);
+        $image->resize($newSizeThumb)->save($pathThumbImage, ['quality' => 100]);
+
+        return true;
     }
 }

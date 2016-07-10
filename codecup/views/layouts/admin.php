@@ -64,7 +64,6 @@ $this->title = 'ensinaê';
 
     
         if (Yii::$app->user->isGuest) {
-          //  $menuItems[] = ['label' => 'Assinar', 'url' => ['/assinaturas/planos']];  
             $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];        
         } else {
          
@@ -78,10 +77,13 @@ $this->title = 'ensinaê';
                         ] 
             ];
 
+            $image = Yii::$app->user->identity->foto != null ? Yii::getAlias('@web').'/uploads/users/'.Yii::$app->user->identity->foto : Yii::getAlias('@web')."/img/default-avatar.png";
+
             $menuItems[] = [
-                        'label' => Yii::$app->user->identity->nome . "<img src='".Yii::getAlias('@web')."/img/default-avatar.png' class='avatar' />",
+                        'label' => Yii::$app->user->identity->nome . "<img src='".$image."' class='avatar' />",
                         'items' => [
                             ['label' => 'Meu Perfil', 'url' => ['/user/profile']],
+                            ['label' => 'Editar Perfil', 'url' => ['/user/update']],
                             ['label' => 'Mensagens', 'url' => ['/user/profile']],
                             ['label' => 'Historico', 'url' => ['/historico/index']],
                             ['label' => 'Sair','url' => ['/site/logout'], 'linkOptions' => ['data-method' => 'post']],
