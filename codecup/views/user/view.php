@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\User */
@@ -27,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <img alt="" src="<?= Yii::getAlias('@web') ?>/img/default-avatar.png">
             </div>
         <?php } ?>
-        <div class="card-info"> 
+        <div class="card-info">
             <span class="card-title"><?= $model->nome ?></span>
         </div>
     </div>
@@ -80,13 +81,84 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <div class="tab-pane fade in" id="tab2">
                 <?php if (count($model->rAulas) > 0) { ?>
-                    s
+                    <div class="container">
+                        <div class="row col-md-11  custyle">
+                            <table class="table table-striped custab">
+                            <thead>
+                                <tr>
+                                    <th>Título</th>
+                                    <th>Descrição</th>
+                                    <th>Tags</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <?php foreach ($model->rAulas as $elem){ ?>
+                                <tr>
+                                    <td>
+                                        <a  href="<?= Url::to(['aulas/view', 'id' => $elem->id])?>">
+                                            <?= $elem->titulo ?>
+                                        </a>
+                                    </td>
+                                    <td><?= $elem->descricao ?></td>
+                                    <td><?= $elem->tags ?></td>
+                                    <td class="text-center">
+                                        <a class='btn btn-info btn-xs' href="<?= Url::to(['aulas/update', 'id' => $elem->id])?>">
+                                            <span class="glyphicon glyphicon-edit"></span>Editar
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php }?>
+                            </table>
+                        </div>
+                    </div>
                 <?php } else { ?>
                     <center>Você não possui nenhuma aula cadastrada</center>
                 <?php } ?>
             </div>
             <div class="tab-pane fade in" id="tab3">
-                <?php if (count($model->rAulas) > 0) { ?>
+                <?php if (count($model->rAgenda) > 0) { ?>
+                    <div class="container">
+                        <div class="row col-md-11  custyle">
+                            <table class="table table-striped custab">
+                                <thead>
+                                    <tr>
+                                        <th>Título</th>
+                                        <th>Pessoa</th>
+                                        <th>Data</th>
+                                        <th>Hora</th>
+                                        <th>Duração</th>
+                                    </tr>
+                                </thead>
+                                <?php foreach ($model->rAgenda as $elem){ ?>
+                                    <?php if( Yii::$app->user->identity->id == $elem->id_prof) { ?>
+                                        <tr style = "background: #334d4d">
+                                            <td>
+                                                <a  href="<?= Url::to(['aulas/view', 'id' => $elem->id_aula])?>">
+                                                    <?= $elem->titulo ?>
+                                                </a>
+                                            </td>
+                                            <td><?= $elem->rAluno->nome ?></td>
+                                            <td><?= $elem->data ?></td>
+                                            <td><?= $elem->hora ?></td>
+                                            <td><?= $elem->duracao ?></td>
+                                        </tr>
+                                    <?php } else{ ?>
+                                        <tr>
+                                            <td>
+                                                <a  href="<?= Url::to(['aulas/view', 'id' => $elem->id_aula])?>">
+                                                    <?= $elem->titulo ?>
+                                                </a>
+                                            </td>
+                                            <td><?= $elem->rProf->nome ?></td>
+                                            <td><?= $elem->data ?></td>
+                                            <td><?= $elem->hora ?></td>
+                                            <td><?= $elem->duracao ?></td>
+                                        </tr>
+                                    <?php }?>
+                                <?php }?>
+                            </table>
+                        </div>
+                    </div>
                 <?php } else { ?>
                     <center>Você não possui aulas programadas</center>
                 <?php } ?>

@@ -3,7 +3,7 @@
 namespace app\models;
 
 use Yii;
-
+use app\models\User;
 /**
  * This is the model class for table "{{%tbl_agenda}}".
  *
@@ -51,5 +51,13 @@ class Agenda extends \yii\db\ActiveRecord
             'hora' => 'Hora',
             'duracao' => 'Duracao',
         ];
+    }
+    public function getRAluno()
+    {
+        return $this->hasOne(User::className(), ['id' => 'id_aluno']);
+    }
+    public function getRProf()
+    {
+        return $this->hasOne(User::className(), ['id' => 'id_prof']);
     }
 }
