@@ -352,7 +352,7 @@ center>img{
     padding:0 5px;
     font-size: 20px;
     line-height: 1;
-    color: #262626;
+    color: #ffffff;
     background-color: rgba(255, 255, 255, 0.1);
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
@@ -383,4 +383,14 @@ center>img{
 .custab:hover{
     box-shadow: 3px 3px 0px transparent;
     transition: 0.5s;
+}
+
+.gold {
+    color: #00cc00;
+}
+
+.logo .navbar-brand {
+    font-size: 240%; 
+    font-family: Gloria Hallelujah; 
+    color:white;
 }

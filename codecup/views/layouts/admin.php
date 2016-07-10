@@ -12,7 +12,7 @@ use yii\helpers\Url;
 
 AppAsset::register($this);
 
-$this->title = 'ensinaê';
+$this->title = 'Ensinaê!';
 
 ?>
 <?php $this->beginPage() ?>
@@ -24,6 +24,18 @@ $this->title = 'ensinaê';
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <meta name="description" content="Somos um site de troca de aulas entre estudantes universitários" />
+    <link rel="apple-touch-icon" sizes="57x57" href="<?= Yii::getAlias('@web'); ?>/img/favicons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="<?= Yii::getAlias('@web'); ?>/img/favicons/apple-touch-icon-60x60.png">
+    <link rel="icon" type="image/png" href="<?= Yii::getAlias('@web'); ?>/img/favicons/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="<?= Yii::getAlias('@web'); ?>/img/favicons/favicon-16x16.png" sizes="16x16">
+    <link href='https://fonts.googleapis.com/css?family=Gloria+Hallelujah' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat|Nunito|Open+Sans|Work+Sans" rel="stylesheet">
+    <link rel="manifest" href="img/favicons/manifest.json">
+    <link rel="shortcut icon" href="img/favicons/favicon.ico">
+    <meta name="msapplication-TileColor" content="#00a8ff">
+    <meta name="msapplication-config" content="<?= Yii::getAlias('@web'); ?>/img/favicons/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="description" content="Somos um site de troca de aulas entre estudantes universitários" />
     <meta name="keywords" content="educação, aulas, aprender" />
     <meta name="author" content="Eu conheço Gabi" />
     <meta name="msapplication-TileColor" content="#00a8ff">
@@ -31,8 +43,6 @@ $this->title = 'ensinaê';
     <meta name="theme-color" content="#ffffff">
 
     <link rel="icon" type="image/png" href="<?= Yii::getAlias('@web'); ?>/favicon.png">
-    
-    <link href='https://fonts.googleapis.com/css?family=Gloria+Hallelujah' rel='stylesheet' type='text/css'>
     
     <link rel="stylesheet" type="text/css" href="<?= Yii::getAlias('@web'); ?>/css/normalize.css">
     
@@ -44,6 +54,7 @@ $this->title = 'ensinaê';
     <link rel="stylesheet" type="text/css" href="<?= Yii::getAlias('@web'); ?>/fonts/font-awesome-4.1.0/css/font-awesome.min.css">
     <!-- Elegant Icons -->
     <link rel="stylesheet" type="text/css" href="<?= Yii::getAlias('@web'); ?>/fonts/eleganticons/et-icons.css">
+
 
     <link rel="stylesheet" type="text/css" href="<?= Yii::getAlias('@web'); ?>/css/admin.css">
 </head>
@@ -58,7 +69,7 @@ $this->title = 'ensinaê';
             'brandUrl' => Url::to(['user/index']),
             
             'options' => [
-                'class' => 'navbar-inverse navbar-fixed-top',
+                'class' => 'navbar-inverse navbar-fixed-top logo',
             ],
         ]);
 
@@ -73,18 +84,18 @@ $this->title = 'ensinaê';
                         'label' => "Aulas",
                         'items' => [
                             ['label' => 'Suas Aulas', 'url' => ['/aulas/index']],
-                            ['label' => 'Assistir Aula','url' => ['/user/index'], 'linkOptions' => ['data-method' => 'post']],
+                            ['label' => 'Assistir Aula','url' => ['/aulas/busca']],
                         ] 
             ];
 
             $image = Yii::$app->user->identity->foto != null ? Yii::getAlias('@web').'/uploads/users/'.Yii::$app->user->identity->foto : Yii::getAlias('@web')."/img/default-avatar.png";
-
+            $nome = explode(" ", Yii::$app->user->identity->nome);
             $menuItems[] = [
-                        'label' => Yii::$app->user->identity->nome . "<img src='".$image."' class='avatar' />",
+                        'label' => $nome[0] . "<img src='".$image."' class='avatar' />",
                         'items' => [
                             ['label' => 'Meu Perfil', 'url' => ['/user/profile']],
                             ['label' => 'Editar Perfil', 'url' => ['/user/update']],
-                            ['label' => 'Mensagens', 'url' => ['/user/profile']],
+                            ['label' => 'Mensagens', 'url' => ['/msg/index']],
                             ['label' => 'Historico', 'url' => ['/historico/index']],
                             ['label' => 'Sair','url' => ['/site/logout'], 'linkOptions' => ['data-method' => 'post']],
                         ] 
@@ -103,7 +114,9 @@ $this->title = 'ensinaê';
     <div class="container">
         <?= $content ?>
     </div>
+
 </div>
+
 <?php $this->endBody() ?>
 <script src="<?php echo Yii::getAlias('@web') ?>/js/admin_functions.js"></script>
 </body>

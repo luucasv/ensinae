@@ -29,7 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         <?php } ?>
         <div class="card-info">
-            <span class="card-title"><?= $model->nome ?></span>
+            <span class="card-title"><?= $model->nome ?> <span class="gold">(<?= $model->coins; ?> <i class="fa fa-money"></i>)</span></span>
         </div>
     </div>
     <div class="btn-pref btn-group btn-group-justified btn-group-lg" role="group" aria-label="...">

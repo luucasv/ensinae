@@ -45,7 +45,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             [['nome', 'email', 'senha', 'cidade', 'estado', 'universidade'], 'required'],
-            [['cidade', 'estado'], 'integer'],
+            [['cidade', 'estado', 'coins'], 'integer'],
             [['data_cadastro', 'confirm_pass', 'cropInfo'], 'safe'],
             [['nome', 'email', 'universidade'], 'string', 'max' => 100],
             [['email'], 'email'],
@@ -173,45 +173,48 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $nome = strtolower(str_replace(" ", "_", $this->nome.date('dmYHis', strtotime($this->data_cadastro))));
 
-        $image = Image::getImagine()->open($this->imageUpload->tempName);
+        if($this->imageUpload != null) {
 
-        $cropInfo = Json::decode($this->cropInfo)[0];
+            $image = Image::getImagine()->open($this->imageUpload->tempName);
 
-        $cropInfo['dWidth'] = (int) $cropInfo['dWidth'];
-        $cropInfo['dHeight'] = (int) $cropInfo['dHeight'];
-        $cropInfo['x'] = abs($cropInfo['x']);
-        $cropInfo['y'] = abs($cropInfo['y']);
-        $cropInfo['width'] = (int) $cropInfo['width'];
-        $cropInfo['height'] = (int) $cropInfo['height'];
+            $cropInfo = Json::decode($this->cropInfo)[0];
 
-        $oldImages = FileHelper::findFiles(Yii::getAlias('@uploadImgPath'),
-            [
-                'only' => [
-                    $nome . '.*',
-                    '/thumbs/thumb_' . $nome . '.*'
+            $cropInfo['dWidth'] = (int) $cropInfo['dWidth'];
+            $cropInfo['dHeight'] = (int) $cropInfo['dHeight'];
+            $cropInfo['x'] = abs($cropInfo['x']);
+            $cropInfo['y'] = abs($cropInfo['y']);
+            $cropInfo['width'] = (int) $cropInfo['width'];
+            $cropInfo['height'] = (int) $cropInfo['height'];
+
+            $oldImages = FileHelper::findFiles(Yii::getAlias('@uploadImgPath'),
+                [
+                    'only' => [
+                        $nome . '.*',
+                        '/thumbs/thumb_' . $nome . '.*'
+                    ]
                 ]
-            ]
-        );
+            );
 
-        for ($counter = 0; $counter != count($oldImages); $counter++) {
-            @unlink($oldImages[$counter]);
+            for ($counter = 0; $counter != count($oldImages); $counter++) {
+                @unlink($oldImages[$counter]);
+            }
+
+            $newSize = new Box($cropInfo['dWidth'], $cropInfo['dHeight']);
+            $newSizeThumb = new Box(50, 50);
+            $cropSize = new Box($cropInfo['width'], $cropInfo['height']);
+            $cropPoint = new Point($cropInfo['x'], $cropInfo['y']);
+
+            $imageName = $nome . '.' . $this->imageUpload->getExtension();
+
+            $pathThumbImage = Yii::getAlias('@uploadImgThumbsPath') . '/thumb_' . $imageName;
+            $pathImage = Yii::getAlias('@uploadImgPath') . '/' . $imageName;
+
+            $this->foto = $imageName;
+
+            $image->resize($newSize)->crop($cropPoint, $cropSize)->save($pathImage, ['quality' => 100]);
+            $image->resize($newSizeThumb)->save($pathThumbImage, ['quality' => 100]);
+
+            return true;
         }
-
-        $newSize = new Box($cropInfo['dWidth'], $cropInfo['dHeight']);
-        $newSizeThumb = new Box(50, 50);
-        $cropSize = new Box($cropInfo['width'], $cropInfo['height']);
-        $cropPoint = new Point($cropInfo['x'], $cropInfo['y']);
-
-        $imageName = $nome . '.' . $this->imageUpload->getExtension();
-
-        $pathThumbImage = Yii::getAlias('@uploadImgThumbsPath') . '/thumb_' . $imageName;
-        $pathImage = Yii::getAlias('@uploadImgPath') . '/' . $imageName;
-
-        $this->foto = $imageName;
-
-        $image->resize($newSize)->crop($cropPoint, $cropSize)->save($pathImage, ['quality' => 100]);
-        $image->resize($newSizeThumb)->save($pathThumbImage, ['quality' => 100]);
-
-        return true;
     }
 }

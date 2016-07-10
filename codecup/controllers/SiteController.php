@@ -48,6 +48,21 @@ class SiteController extends Controller
         ];
     }
 
+    public function actionAulas()
+    {
+        return $this->render('aulas');
+    }
+
+    public function actionTutorial()
+    {
+        return $this->render('about');
+    }
+
+    public function actionSobre()
+    {
+        return $this->render('about');
+    }
+
     public function actionIndex()
     {
         $this->layout = 'landing_page.php';

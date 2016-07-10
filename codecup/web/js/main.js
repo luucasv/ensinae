@@ -46,9 +46,9 @@ jQuery(function($) {
 		});
 
 		// Navbar Init
-		$('nav').addClass('original').clone().insertAfter('nav').addClass('navbar-fixed-top').css('position', 'fixed').css('top', '0').css('margin-top', '0').removeClass('original');
-		$('.mobile-nav ul').html($('nav .navbar-nav').html());
-		$('nav.navbar-fixed-top .navbar-brand img').attr('src', $('nav.navbar-fixed-top .navbar-brand img').data("active-url"));
+		//$('nav').addClass('original').clone().insertAfter('nav').addClass('navbar-fixed-top').css('position', 'fixed').css('top', '0').css('margin-top', '0').removeClass('original');
+		//$('.mobile-nav ul').html($('nav .navbar-nav').html());
+		//$('nav.navbar-fixed-top .navbar-brand img').attr('src', $('nav.navbar-fixed-top .navbar-brand img').data("active-url"));
 
 		// Typing Intro Init
 		$(".typed").typewriter({
@@ -152,7 +152,7 @@ jQuery(function($) {
 			bottomMargin = parseInt($dialog.css('marginBottom'), 10);
 
 		// Make sure you don't hide the top part of the modal w/ a negative margin
-		// if it's longer than the screen height, and keep the margin equal to 
+		// if it's longer than the screen height, and keep the margin equal to
 		// the bottom margin of the modal
 		if (offset < bottomMargin) offset = bottomMargin;
 		$dialog.css("margin-top", offset);

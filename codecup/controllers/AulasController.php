@@ -29,6 +29,13 @@ class AulasController extends Controller
         ];
     }
 
+    public function actionBusca()
+    {
+        $this->layout = "admin";
+
+        return $this->render('busca');
+    }
+
     /**
      * Lists all Aulas models.
      * @return mixed
@@ -75,6 +82,8 @@ class AulasController extends Controller
         $this->layout = "admin";
 
         $model = new Aulas();
+
+        $model->disponibilidade = 1;
 
         $date = new \DateTime();
         //$model->data_cadastro = $date->getTimestamp();

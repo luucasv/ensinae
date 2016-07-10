@@ -40,7 +40,7 @@ use app\models\Cidade;
 
     <div class="row">
         <div class="col-md-6">
-            <?= $form->field($model, 'senha')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'senha')->textInput(['maxlength' => true])->passwordInput() ?>
         </div>
         <div class="col-md-6">
             <?= $form->field($model, 'universidade')->textInput(['maxlength' => true]) ?>
@@ -59,7 +59,7 @@ use app\models\Cidade;
         </div>
         <div class="col-md-6">
             <?= $form->field($model, 'cidade')->dropdownList(
-                Cidade::find()->select(['nome', 'id'])->indexBy('id')->column(),
+                Cidade::find()->select(['nome', 'id'])->indexBy('id')->orderBy('nome')->column(),
                 ['prompt' => 'Selecione a sua cidade']
             ) ?>
         </div>

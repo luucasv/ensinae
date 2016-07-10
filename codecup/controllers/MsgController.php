@@ -35,12 +35,15 @@ class MsgController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new MsgSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $this->layout = "admin";
+        $searchModel = Msg::find()->where(['id_send' => Yii::$app->user->identity->id])->asArray()->all();
+
+        $searchModel2 = Msg::find()->where(['id_rec' => Yii::$app->user->identity->id])->asArray()->all();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'Enviadas' => $searchModel,
+            'Recebidos' => $searchModel2,
         ]);
     }
 
@@ -64,9 +67,9 @@ class MsgController extends Controller
     public function actionCreate()
     {
         $model = new Msg();
-
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         } else {
             return $this->render('create', [
                 'model' => $model,

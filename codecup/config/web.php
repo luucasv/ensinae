@@ -51,6 +51,10 @@ $config = [
         ],
     ],
     'params' => $params,
+    'aliases' => [
+        '@uploadImgPath' => dirname(__DIR__) . '/web/uploads/users',
+        '@uploadImgThumbsPath' => '@uploadImgPath/thumbs',
+    ],
 ];
 
 if (YII_ENV_DEV) {

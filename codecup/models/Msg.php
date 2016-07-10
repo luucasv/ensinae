@@ -3,7 +3,7 @@
 namespace app\models;
 
 use Yii;
-
+use app\models\User;
 /**
  * This is the model class for table "{{%tbl_msg}}".
  *
@@ -47,11 +47,21 @@ class Msg extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'id_send' => 'Id Send',
-            'id_rec' => 'Id Rec',
-            'msg' => 'Msg',
+            'id_rec' => 'Para:',
+            'msg' => 'Mensagem',
             'anexo' => 'Anexo',
             'type' => 'Type',
             'data_msg' => 'Data Msg',
         ];
     }
+
+    public function getRAutor(){
+        return $this->hasOne(User::className(), ['id' => 'id_send']);
+    }
+
+    public function getRReceptor(){
+        return $this->hasOne(User::className(), ['id' => 'id_rec']);
+    }
+
+
 }
