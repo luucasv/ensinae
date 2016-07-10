@@ -55,7 +55,7 @@ $this->title = 'ensinaê';
     <?php
         NavBar::begin([
             'brandLabel' => "ensinaê",
-            'brandUrl' => Url::to(['site/visaogeral']),
+            'brandUrl' => Url::to(['user/index']),
             
             'options' => [
                 'class' => 'navbar-inverse navbar-fixed-top',
@@ -73,7 +73,7 @@ $this->title = 'ensinaê';
                         'label' => "Aulas",
                         'items' => [
                             ['label' => 'Suas Aulas', 'url' => ['/aulas/index']],
-                            ['label' => 'Assistir Aula','url' => ['/site/logout'], 'linkOptions' => ['data-method' => 'post']],
+                            ['label' => 'Assistir Aula','url' => ['/user/index'], 'linkOptions' => ['data-method' => 'post']],
                         ] 
             ];
 

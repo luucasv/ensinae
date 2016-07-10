@@ -38,6 +38,9 @@ class AulasController extends Controller
         $this->layout = "admin";
 
         $searchModel = new AulasSearch();
+
+        $searchModel->id_user = Yii::$app->user->identity->id;
+        
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
